@@ -1,3 +1,4 @@
 from django.contrib import admin
+from starwars_api.models import DatasetMetadata
 
-# Register your models here.
+admin.site.register(DatasetMetadata)
