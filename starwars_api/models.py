@@ -1,6 +1,6 @@
 from django.db import models
-from django.conf import settings
 import os
+from django.conf import settings
 
 
 def get_datasets_directory_path():
@@ -8,5 +8,5 @@ def get_datasets_directory_path():
 
 
 class DatasetMetadata(models.Model):
-    filepath = models.FilePathField(path=get_datasets_directory_path)
+    filepath = models.FilePathField(path=get_datasets_directory_path())
     date = models.DateTimeField(auto_now=True)
