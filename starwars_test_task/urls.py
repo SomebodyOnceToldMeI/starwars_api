@@ -16,10 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import routers
-from starwars_api.views import DatasetMetadataViewSet
+from starwars_api.views import DatasetMetadataViewSet, DatasetViewSet
 
 router = routers.DefaultRouter()
 router.register(r'dataset_metadata', DatasetMetadataViewSet)
+router.register(r'dataset', DatasetViewSet, basename='dataset')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
