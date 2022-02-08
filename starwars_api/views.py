@@ -1,11 +1,11 @@
 from rest_framework import viewsets
 from starwars_api.models import DatasetMetadata
 from starwars_api.serializers import DatasetMetadataSerializer
-from starwars_api.api_data_downloader import ApiDataDownloader
-from starwars_api.models import get_datasets_directory_path
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.core.paginator import Paginator
+from starwars_api.tasks import download_api_character_data
+from rest_framework.reverse import reverse
 import petl
 
 
@@ -14,11 +14,11 @@ class DatasetMetadataViewSet(viewsets.ModelViewSet):
     serializer_class = DatasetMetadataSerializer
 
     def create(self, request):
-        file_store_directory = get_datasets_directory_path()
-        downloader = ApiDataDownloader(file_store_directory)
-        filepath = downloader.download()
-        request.data['filepath'] = filepath
-        return super().create(request)
+        dataset_url_pattern = reverse('dataset-detail', request=request, args=['format'])
+        data = request.data
+        context = {'dataset_url_pattern': dataset_url_pattern}
+        download_api_character_data.delay(data, context)
+        return Response(data={'status': 'Dataset is being downloaded.'})
 
 
 class DatasetViewSet(viewsets.ViewSet):

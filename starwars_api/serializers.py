@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.reverse import reverse
 from starwars_api.models import DatasetMetadata
 
 
@@ -10,6 +9,6 @@ class DatasetMetadataSerializer(serializers.HyperlinkedModelSerializer):
 
     def create(self, validated_data):
         metadata = DatasetMetadata.objects.create(filepath=validated_data['filepath'])
-        metadata.dataset_url = reverse('dataset-detail', request=self.context['request'], args=[str(metadata.id)])
+        metadata.dataset_url = self.context['dataset_url_pattern'].replace('format', str(metadata.id))
         metadata.save()
         return metadata
